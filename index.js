@@ -45,6 +45,27 @@ app.get('/animes', async (req, res) => {
 app.get('/create', (req, res) => {
 	res.render('createAnime');
 });
+app.get('/actualizar/:id',async(req,res)=>{
+    const {id} = req.params;
+    let data = await leerAnime();
+    let found = data.animes.find(anime=>anime.id == id);
+    res.render('actualizar', {
+        anime: found,
+    })
+})
+
+app.put('/actualizar/:id', async(req,res)=>{
+	try {
+		let {id} = req.params;
+		let { nombre, genero, year, autor } = req.body;
+		let respuesta = await actualizarAnime(id,nombre, genero,year, autor)
+
+		res.status(200).send({code:200, message: respuesta})
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({code:500, message: 'Error al intentar actualizar el anime'})
+	}
+})
 
 app.post('/create', async (req, res) => {
 	try {
