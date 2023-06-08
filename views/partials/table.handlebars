@@ -1,0 +1,30 @@
+<table class="table table-secondary table-hover">
+    {{#if animes}}
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Genero</th>
+            <th scope="col">Año</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Actualizar</th>
+            <th scope="col">Borrar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each animes}}
+        <tr>
+            <th scope="row">{{this.id}}</th>
+            <td scope="row">{{this.nombre}}</td>
+            <td scope="row">{{this.genero}}</td>
+            <td scope="row">{{this.year}}</td>
+            <td scope="row">{{this.autor}}</td>
+            <td scope="row"><button class="btn btn-sm btn-warning">Actualizar</button></td>
+            <td scope="row"><button class="btn btn-sm btn-danger">Borrar</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+    {{else}}
+        {{> card mensaje='Oops!' descripcion='No hay animes por mostrar'}}
+    {{/if}}
+</table>

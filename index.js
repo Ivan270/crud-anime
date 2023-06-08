@@ -1,21 +1,29 @@
 const express = require('express');
+const { create } = require('express-handlebars');
+const {
+	leerAnime,
+	buscarPorNombre,
+	agregarAnime,
+	actualizarAnime,
+	borrarAnime,
+} = require('./utils/operaciones.js');
 
 const app = express();
-// const hbs = create({
-// 	partialsDir: ['views/partials/'],
-// });
+const hbs = create({
+	partialsDir: ['views/partials/'],
+});
 
-// app.engine('handlebars', hbs.engine);
-// app.set('view engine', 'handlebars');
-// app.set('views', __dirname + '/views');
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+app.set('views', __dirname + '/views');
 
 app.use(express.json());
 
-// app.use(express.static('public'));
-// app.use(
-// 	'/bootstrap',
-// 	express.static(__dirname + '/node_modules/bootstrap/dist/')
-// );
+app.use(express.static('public'));
+app.use(
+	'/bootstrap',
+	express.static(__dirname + '/node_modules/bootstrap/dist/')
+);
 
 const PORT = 3000;
 app.listen(
@@ -24,6 +32,30 @@ app.listen(
 );
 
 // RUTAS
-app.get(['/', '/home'], (req, res) => {
-	res.send('home');
+app.get(['/', '/home'], async(req, res) => {
+    let data = await leerAnime()
+	res.render('home',{
+        animes: data.animes
+    });
+});
+app.get('/animes', async (req, res) => {
+	let animes = await leerAnime();
+	res.send(animes);
+});
+app.get('/create', (req, res) => {
+	res.render('createAnime');
+});
+
+app.post('/create', async (req, res) => {
+	try {
+		let { nombre, genero, year, autor } = req.body;
+		let respuesta = await agregarAnime(nombre, genero, year, autor);
+		res.status(201).send({ code: 201, message: respuesta });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({
+			code: 500,
+			message: 'Error al guardar usuario en la bd',
+		});
+	}
 });

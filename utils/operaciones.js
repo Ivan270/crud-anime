@@ -4,14 +4,8 @@ const { v4: uuid } = require('uuid');
 const leerAnime = () => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let animes = await fs.readFile('./db/animetest.json', 'utf8');
-			// resolve(JSON.parse(animes));
+			let animes = await fs.readFile('./db/anime.json', 'utf8');
 			let formatAnimes = JSON.parse(animes);
-			// let objetos = Object.entries(formatAnimes).map((anime, index) => {
-			// 	let objeto = anime[1];
-			// 	objeto.id = anime[0];
-			// 	return objeto;
-			// });
 			resolve(formatAnimes);
 		} catch (error) {
 			reject('Error al leer archivo anime.json');
@@ -44,9 +38,11 @@ const agregarAnime = (nombre, genero, year, autor) => {
 				autor,
 				id: uuid().slice(0, 6),
 			};
+			// console.log(nuevoAnime);
+			// console.log(data);
 			data.animes.push(nuevoAnime);
 			await fs.writeFile(
-				'./db/animetest.json',
+				'./db/anime.json',
 				JSON.stringify(data, null, 4),
 				'utf8'
 			);
@@ -54,7 +50,7 @@ const agregarAnime = (nombre, genero, year, autor) => {
 				`Se ha guardado correctamente el nuevo anime ${nuevoAnime.nombre}`
 			);
 		} catch (error) {
-			reject('Error al intentar guardar el nuevo anime');
+			reject(error);
 		}
 	});
 };
@@ -71,7 +67,7 @@ const actualizarAnime = (id, nombre, genero, year, autor) => {
 			animeEncontrado.year = year;
 			animeEncontrado.autor = autor;
 			await fs.writeFile(
-				'./db/animetest.json',
+				'./db/anime.json',
 				JSON.stringify(data, null, 4),
 				'utf8'
 			);
@@ -89,7 +85,7 @@ const borrarAnime = (id) => {
 			let indexEncontrado = data.animes.findIndex((anime) => anime.id == id);
 			data.animes.splice(indexEncontrado, 1);
 			await fs.writeFile(
-				'./db/animetest.json',
+				'./db/anime.json',
 				JSON.stringify(data, null, 4),
 				'utf8'
 			);
@@ -100,8 +96,10 @@ const borrarAnime = (id) => {
 	});
 };
 
-buscarPorNombre('aKIRA')
-	.then((res) => console.log(res))
-	.catch((err) => console.log(err));
-
-module.exports = { leerAnime, agregarAnime, actualizarAnime, borrarAnime };
+module.exports = {
+	leerAnime,
+	buscarPorNombre,
+	agregarAnime,
+	actualizarAnime,
+	borrarAnime,
+};
