@@ -1,7 +1,7 @@
 {
     "animes": [
         {
-            "nombre": "Akira",
+            "nombre": "Akiras",
             "genero": "Seinen",
             "year": "1988",
             "autor": "Katsuhiro Otomo",
@@ -34,13 +34,6 @@
             "year": "1995",
             "autor": "Yoshiyuki Sadamoto",
             "id": "5"
-        },
-        {
-            "nombre": "Anime Prueba",
-            "genero": "Genero Prueba",
-            "year": "2023",
-            "autor": "El Ivan",
-            "id": "749212"
         }
     ]
 }

@@ -46,11 +46,12 @@
                 body: raw, 
                 redirect: 'follow'
             };
-            let response = await fetch("http://localhost:3000/create", requestOptions);
+            let response = await fetch("http://localhost:3000/animes/new", requestOptions);
             let data = await response.json();
             if(data.code == 201){
                 alert('Anime guardado con éxito')
-                formAgregar.reset()
+                formAgregar.reset();
+                document.location.href="/home";
             } else {
                 throw new Error('Error al intentar guardar el anime en la DB')
             }

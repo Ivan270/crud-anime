@@ -42,10 +42,10 @@ app.get('/animes', async (req, res) => {
 	let animes = await leerAnime();
 	res.send(animes);
 });
-app.get('/create', (req, res) => {
-	res.render('createAnime');
+app.get('/animes/new', (req, res) => {
+	res.render('newAnime');
 });
-app.get('/actualizar/:id',async(req,res)=>{
+app.get('/animes/:id',async(req,res)=>{
     const {id} = req.params;
     let data = await leerAnime();
     let found = data.animes.find(anime=>anime.id == id);
@@ -53,10 +53,21 @@ app.get('/actualizar/:id',async(req,res)=>{
         anime: found,
     })
 })
-
-app.put('/actualizar/:id', async(req,res)=>{
+app.get('/anime/:nombre', async(req,res)=>{
 	try {
-		let {id} = req.params;
+		let {nombre} = req.params;
+		let encontrado = await buscarPorNombre(nombre);
+		res.render('anime',{
+			anime: encontrado
+		})
+	} catch (error) {
+		
+	}
+})
+
+app.put('/animes/:id', async(req,res)=>{
+	try {
+		const {id} = req.params;
 		let { nombre, genero, year, autor } = req.body;
 		let respuesta = await actualizarAnime(id,nombre, genero,year, autor)
 
@@ -67,7 +78,7 @@ app.put('/actualizar/:id', async(req,res)=>{
 	}
 })
 
-app.post('/create', async (req, res) => {
+app.post('/animes/new', async (req, res) => {
 	try {
 		let { nombre, genero, year, autor } = req.body;
 		let respuesta = await agregarAnime(nombre, genero, year, autor);
@@ -76,7 +87,18 @@ app.post('/create', async (req, res) => {
 		console.log(error);
 		res.status(500).send({
 			code: 500,
-			message: 'Error al guardar usuario en la bd',
+			message: 'Error al guardar anime en la BD',
 		});
 	}
 });
+
+app.delete('/animes/:id', async(req,res)=>{
+	try {
+		let {id} = req.params;
+		let respuesta = await borrarAnime(id);
+		res.status(200).send({code: 200, message: respuesta})
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({code: 500, message: 'Error al eliminar anime en la BD'})
+	}
+})

@@ -38,8 +38,7 @@ const agregarAnime = (nombre, genero, year, autor) => {
 				autor,
 				id: uuid().slice(0, 6),
 			};
-			// console.log(nuevoAnime);
-			// console.log(data);
+			console.log(data)
 			data.animes.push(nuevoAnime);
 			await fs.writeFile(
 				'./db/anime.json',
