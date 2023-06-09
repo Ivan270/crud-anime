@@ -35,6 +35,7 @@ app.listen(
 app.get(['/', '/home'], async(req, res) => {
     let data = await leerAnime()
 	res.render('home',{
+		home:true,
         animes: data.animes
     });
 });
@@ -43,7 +44,9 @@ app.get('/animes', async (req, res) => {
 	res.send(animes);
 });
 app.get('/animes/new', (req, res) => {
-	res.render('newAnime');
+	res.render('newAnime',{
+		new: true
+	});
 });
 app.get('/animes/:id',async(req,res)=>{
     const {id} = req.params;
