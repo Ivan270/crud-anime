@@ -26,60 +26,60 @@ app.use(
 );
 
 const PORT = 3000;
-app.listen(
+let server = app.listen(
 	PORT,
 	console.log('Servidor escuchando en http://localhost:' + PORT)
 );
 
 // RUTAS
-app.get(['/', '/home'], async(req, res) => {
-    let data = await leerAnime()
-	res.render('home',{
-		home:true,
-        animes: data.animes
-    });
+app.get(['/', '/home'], async (req, res) => {
+	let data = await leerAnime();
+	res.render('home', {
+		home: true,
+		animes: data.animes,
+	});
 });
 app.get('/animes', async (req, res) => {
 	let animes = await leerAnime();
 	res.send(animes);
 });
 app.get('/animes/new', (req, res) => {
-	res.render('newAnime',{
-		new: true
+	res.render('newAnime', {
+		new: true,
 	});
 });
-app.get('/animes/:id',async(req,res)=>{
-    const {id} = req.params;
-    let data = await leerAnime();
-    let found = data.animes.find(anime=>anime.id == id);
-    res.render('actualizar', {
-        anime: found,
-    })
-})
-app.get('/anime/:nombre', async(req,res)=>{
+app.get('/animes/:id', async (req, res) => {
+	const { id } = req.params;
+	let data = await leerAnime();
+	let found = data.animes.find((anime) => anime.id == id);
+	res.render('actualizar', {
+		anime: found,
+	});
+});
+app.get('/anime/:nombre', async (req, res) => {
 	try {
-		let {nombre} = req.params;
+		let { nombre } = req.params;
 		let encontrado = await buscarPorNombre(nombre);
-		res.render('anime',{
-			anime: encontrado
-		})
-	} catch (error) {
-		
-	}
-})
+		res.render('anime', {
+			anime: encontrado,
+		});
+	} catch (error) {}
+});
 
-app.put('/animes/:id', async(req,res)=>{
+app.put('/animes/:id', async (req, res) => {
 	try {
-		const {id} = req.params;
+		const { id } = req.params;
 		let { nombre, genero, year, autor } = req.body;
-		let respuesta = await actualizarAnime(id,nombre, genero,year, autor)
+		let respuesta = await actualizarAnime(id, nombre, genero, year, autor);
 
-		res.status(200).send({code:200, message: respuesta})
+		res.status(200).send({ code: 200, message: respuesta });
 	} catch (error) {
 		console.log(error);
-		res.status(500).send({code:500, message: 'Error al intentar actualizar el anime'})
+		res
+			.status(500)
+			.send({ code: 500, message: 'Error al intentar actualizar el anime' });
 	}
-})
+});
 
 app.post('/animes/new', async (req, res) => {
 	try {
@@ -95,13 +95,21 @@ app.post('/animes/new', async (req, res) => {
 	}
 });
 
-app.delete('/animes/:id', async(req,res)=>{
+app.delete('/animes/:id', async (req, res) => {
 	try {
-		let {id} = req.params;
+		let { id } = req.params;
 		let respuesta = await borrarAnime(id);
-		res.status(200).send({code: 200, message: respuesta})
+		res.status(200).send({ code: 200, message: respuesta });
 	} catch (error) {
 		console.log(error);
-		res.status(500).send({code: 500, message: 'Error al eliminar anime en la BD'})
+		res
+			.status(500)
+			.send({ code: 500, message: 'Error al eliminar anime en la BD' });
 	}
-})
+});
+
+app.all('*', (req, res) => {
+	res.status(404).send('Ruta no encontrada');
+});
+
+module.exports = app;
